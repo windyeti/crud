@@ -1,17 +1,19 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const consolidate = require('consolidate');
-const handlebars = require('handlebars');
+// const handlebars = require('handlebars');
 const path = require('path');
+const mongoose = require('mongoose');
 
-const { Task } = require('./models');
-// const data = Task.getAll();
-// data.then((result) => {
-//     console.log('result',result)
-// },
-//     (err) => {
-//     console.log('err', err)
-//     })
+
+// const { Task } = require('./models');
+const { List } = require('./models');
+
+mongoose.connect('mongodb://localhost:27017/tasks', (err) => {
+  if (err) throw err;
+  console.log('Подключились');
+});
+
 const app = express();
 app.engine('hbs', consolidate.handlebars);
 app.set('view engine', 'hbs');
@@ -19,43 +21,28 @@ app.set('views', './views');
 
 app.use(express.static(path.join(__dirname, "public")));
 app.use(bodyParser.json());
-// app.use((req, res) => {
-//     res.redirect(req.get('/'));
+
+
+app.get('/', async (req, res) => {
+  await List.find().then(result => {
+    console.log('result', result);
+    res.render('tasks', result)
+  })
+});
+
+// app.post('/tasks', async (req, res) => {
+//     const { nameTask } = req.body;
+//     await Task.create(nameTask);
+//     res.send({"ok" : "ok"});
 // });
-
-// app.get('/', (req, res) => {
-//     res.send('Упс!!! Наш заголовок!!!');
+// app.put('/complete', async (req, res) => {
+//     await Task.complete(req.body.value);
+//     res.send({'response' : 'пометил выполненым'});
 // });
-
-app.get('/', (req, res) => {
-    const tasks = Task.getAll();
-    tasks.then(
-        (data) => {
-            let newArray = [];
-            for(let i = 0; data.length > i; i++ ) {
-                newArray.push(data[i]);
-            }
-            req.list = newArray;
-            res.render('tasks', req);
-        }
-    );
-});
-
-app.post('/tasks', async (req, res) => {
-    const { nameTask } = req.body;
-    await Task.create(nameTask);
-    res.send({"ok" : "ok"});
-});
-app.put('/complete', async (req, res) => {
-    // console.log('put=>req.boby', req.body);
-    await Task.complete(req.body.value);
-    res.send({'response' : 'пометил выполненым'});
-});
-app.delete('/delete', async (req, res) => {
-    // console.log('put=>req.boby', req.body);
-    await Task.delete(req.body.value);
-    res.send({'response' : 'удалил'});
-});
+// app.delete('/delete', async (req, res) => {
+//     await Task.delete(req.body.value);
+//     res.send({'response' : 'удалил'});
+// });
 
 
 app.listen(8989);

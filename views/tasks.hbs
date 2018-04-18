@@ -18,7 +18,6 @@
                     class="task_ready"
                 {{/if}}>
                 <!--{{#if this.ready}}-->
-                    <!--<strong>----- ВЫПОЛНЕНЕНО -----</strong>-->
                 <!--{{/if}}>-->
                 <span>{{this.id}}</span>
                 . {{this.name}}
@@ -45,7 +44,6 @@
             e.preventDefault();
             const valueInput = $('form input[name="nameTask"]').val();
             const titleNewTask = JSON.stringify( { nameTask : valueInput} );
-            // console.log( titleNewTask );
             $.ajax({
                 type : 'post',
                 url : 'http://localhost:8989/tasks',
