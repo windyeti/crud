@@ -5,10 +5,6 @@ const path = require('path');
 const mongoose = require('mongoose');
 
 const { List, User } = require('./models');
-// const User = {
-//   username : 'yegor',
-//   passport : 'hamhamham'
-// };
 
 mongoose.connect('mongodb://localhost:27017/tasks', (err) => {
   if (err) throw err;
@@ -25,6 +21,8 @@ app.use((req, res, next) => {
   next();
 });
 //
+const cookieParser = require('cookie-parser');
+app.use(cookieParser());
 
 const session = require('cookie-session');
 app.use(session({ keys : ['secret'] }));
@@ -49,11 +47,16 @@ passport.use(new LocalStrategy((username, password, done) => {
   // .lean() -- преобразует объект монгодб в обычный объект js
 
   User.findOne({ username }).lean().then(user => {
-    if (user && user.password === password) {
-      console.log('user.username from passport', user);
-      delete user.password;
-      console.log('user.password from passport', user);
-      done(null, user);
+    if(user) {
+      if(user.password === password) {
+        console.log('user befor', user);
+        delete user.password;
+        console.log('user after', user);
+        // done(null, {_id: new Object('5ae00be5a338a917c3d67f8e')});
+        done(null, user);
+      } else {
+        done(null, false)
+      }
     } else {
       done(null, false);
     }
