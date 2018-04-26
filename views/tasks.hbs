@@ -11,6 +11,11 @@
 </head>
 <body>
 <h3>Список дел</h3>
+<div class="authUser">
+    <span class="authUser__name">{{user.username}}</span>
+    <!--<button class="authUser__button">Loggout</button>-->
+    <a href="/logout">LOGOUT</a>
+</div>
 <hr>
     <ul id="listTasks">
         {{#each list}}
@@ -19,7 +24,7 @@
                 {{/if}}>
                 <!--{{#if this.ready}}-->
                 <!--{{/if}}>-->
-                <span>{{this.id}}</span>
+                <span>{{this._id}}</span>
                 . {{this.name}}
                 <button class="buttonDelete buttonDelete_{{this.id}}">Удалить</button>
                 <button class="buttonComplete buttonComplete_{{this.id}}">Закончено</button>
@@ -46,7 +51,7 @@
             const titleNewTask = JSON.stringify( { nameTask : valueInput} );
             $.ajax({
                 type : 'post',
-                url : 'http://localhost:8989/tasks',
+                url : 'http://localhost:8888/tasks',
                 contentType : 'application/json',
                 dataType : 'json',
                 data : titleNewTask,
@@ -67,7 +72,7 @@
 
             $.ajax({
                 type : 'put',
-                url : 'http://localhost:8989/complete',
+                url : 'http://localhost:8888/complete',
                 contentType : 'application/json',
                 dataType : 'json',
                 data : value,
@@ -88,7 +93,7 @@
 
             $.ajax({
                 type : 'delete',
-                url : 'http://localhost:8989/delete',
+                url : 'http://localhost:8888/delete',
                 contentType : 'application/json',
                 dataType : 'json',
                 data : value,
@@ -101,6 +106,25 @@
                 }
             });
         });
+        // обработчик на кнопку логаут
+        $('.authUser__button').on('click', (e) => {
+            $.ajax({
+                type : 'get',
+                url : 'http://localhost:8888/logout',
+                // contentType : 'application/json',
+                dataType : 'json',
+                // data : value,
+                success : (response) => {
+                    console.log('ответ от сервера на logout', response);
+                    location.reload(true)
+                },
+                error : (err) => {
+                    console.log('err', err.message);
+                    location.reload(true)
+                }
+            });
+        });
+
     })
 </script>
 </body>
