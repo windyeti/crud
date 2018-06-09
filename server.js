@@ -3,6 +3,7 @@ const bodyParser = require('body-parser');
 const consolidate = require('consolidate');
 const path = require('path');
 const mongoose = require('mongoose');
+const cors = require('cors');
 
 const { List, User } = require('./models');
 
@@ -14,16 +15,17 @@ mongoose.connect('mongodb://localhost:27017/tasks', (err) => {
 const app = express();
 const passport = require('passport');
 
+app.use(cors());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(bodyParser.json());
 app.use(bodyParser());
-//
-// app.use((req, res, next) => {
-//   console.log('req.body', req.body);
-//   next();
-// });
-//
+
+app.use((req, res, next) => {
+  console.log('req.body', req.body);
+  next();
+});
+
 const cookieParser = require('cookie-parser');
 app.use(cookieParser());
 
