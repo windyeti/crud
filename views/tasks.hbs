@@ -51,7 +51,7 @@
             const titleNewTask = JSON.stringify( { nameTask : valueInput} );
             $.ajax({
                 type : 'post',
-                url : 'http://localhost:8888/tasks',
+                url : 'http://188.225.25.93:8888/tasks',
                 contentType : 'application/json',
                 dataType : 'json',
                 data : titleNewTask,
@@ -72,7 +72,7 @@
 
             $.ajax({
                 type : 'put',
-                url : 'http://localhost:8888/complete',
+                url : 'http://188.225.25.93:8888/complete',
                 contentType : 'application/json',
                 dataType : 'json',
                 data : value,
@@ -93,7 +93,7 @@
 
             $.ajax({
                 type : 'delete',
-                url : 'http://localhost:8888/delete',
+                url : 'http://188.225.25.93:8888/delete',
                 contentType : 'application/json',
                 dataType : 'json',
                 data : value,
@@ -110,11 +110,11 @@
         $('.authUser__button').on('click', (e) => {
             $.ajax({
                 type : 'get',
-                url : 'http://localhost:8888/logout',
+                url : 'http://188.225.25.93:8888/logout',
                 // contentType : 'application/json',
                 dataType : 'json',
                 // data : value,
-                success : (response) => {
+                success : (response) => {git
                     console.log('ответ от сервера на logout', response);
                     location.reload(true)
                 },
